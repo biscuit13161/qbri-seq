@@ -1,0 +1,36 @@
+#include <iostream>
+
+
+void alignReads ()
+{
+
+}
+
+void runBWA()
+{
+
+bwa mem /hg38/Homo_sapiens_assembly38.fasta \
+/assignment2/students_2.1.fastq \
+/assignment2/students_2.2.fastq > <file>.sam
+
+
+}
+
+void sortReads()
+{
+
+samtools sort –o <file>.sort.bam <file>.sam
+
+}
+
+void ReadGroups()
+{
+
+java -jar /apps/picard-tools/picard-2.8.2.jar \
+AddOrReplaceReadGroups I=<file>.sort.bam \
+O=<file>.rg.bam CREATE_MD5_FILE=true CREATE_INDEX=true \
+RGLB=Lib1 RGPL=Illumina RGPU=01 RGSM=Test
+
+}
+
+

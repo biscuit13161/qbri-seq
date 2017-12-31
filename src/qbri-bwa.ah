@@ -1,0 +1,10 @@
+
+#ifndef __BWA__
+#define __BWA__
+
+void alignReads ();
+void runBWA();
+void sortReads();
+void ReadGroups();
+
+#endif
