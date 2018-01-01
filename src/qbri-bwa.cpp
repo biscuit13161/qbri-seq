@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void alignReads (string sample, string& outputDirectory,vector<string> files, string& ref)
+void alignReads (string sample, string& outputDirectory, vector<string> files, string& ref)
 {
       cout << ref << endl;
   
@@ -58,7 +58,7 @@ void runBWA(RunData * run,RefData * ref)
   cout << endl << "runBWA: " << ref->reference << endl << endl;
   set<string> samples;
   cout << run->outputDirectory << endl;
-  vector<string> files = getFileList(run->outputDirectory);  
+  vector<string> files = getFileList(run->inputDirectory);  
   int count = 1;
 
   for (vector<RunSample*>::iterator it = run->Samples.begin(); it!= run->Samples.end(); ++it)

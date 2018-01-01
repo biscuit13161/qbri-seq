@@ -20,7 +20,7 @@ void baseRecal(string sample, string& outputDirectory, int count, string& refere
   inputFile += "/" + sample + ".ir.bam";
   cout << endl << "\tRecalibrating Bases for " << sample << endl << endl;
 
-  string cmd = "java " + string(GATKMEM) +" -jar "+ string(GATK) +" -T BaseRecalibrator -I "+ inputFile;
+  string cmd = string(JAVA) + " " + string(GATKMEM) +" -jar "+ string(GATK) +" -T BaseRecalibrator -I "+ inputFile;
   if (count == 1)
   {
     string outputFile = outputDirectory + "/" + sample + ".br.grp";
@@ -64,7 +64,7 @@ string printReads(string sample, string& outputDirectory, string& reference)
 
   cout << endl << "\tPrinting Reads for " << sample << endl << endl;
 
-  string cmd = "java "+ string(GATKMEM) +" -jar "+ string(GATK) + " -T PrintReads -I "+ inputFile +" -o "+ outputFile +" -BQSR "+ bqsrFile +" -R "+ reference +" --generate_md5";
+  string cmd = string(JAVA) + " "+ string(GATKMEM) +" -jar "+ string(GATK) + " -T PrintReads -I "+ inputFile +" -o "+ outputFile +" -BQSR "+ bqsrFile +" -R "+ reference +" --generate_md5";
   execCmd(cmd);
 
   return output;

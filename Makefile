@@ -2,7 +2,7 @@ CXX := g++
 SRCDIR := src
 BUILDDIR := build
 PREFIX := /usr/local
-TARGET := bin/qbri-rna bin/qbri-wes
+TARGET := bin/qbri-rna bin/qbri-wes bin/checkFile
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f ! -name ._*.$(SRCEXT) -name *.$(SRCEXT))
@@ -16,9 +16,9 @@ INC := -I include #-I/usr/local/Cellar/boost/1.64.0_1/include
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	echo " Linking..."
-	echo " $(CXX) $^ $(patsubst bin/%, $(BUILDDIR)/%.o, $@ ) -o $@ $(LIB)"; $(CXX) $(filter-out $(TOBJECTS), $^) $(patsubst bin/%, $(BUILDDIR)/%.o, $@ ) -o $@ $(LIB)
-
+	echo " Linking...";
+	echo "\n $(TOBJECTS)) \n";
+	echo " $(CXX) $(filter-out $(TOBJECTS), $^) $(patsubst bin/%, $(BUILDDIR)/%.o, $@ ) -o $@ $(LIB)"; $(CXX) $(filter-out $(TOBJECTS), $^) $(patsubst bin/%, $(BUILDDIR)/%.o, $@ ) -o $@ $(LIB);
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT) $(SRCDIR)/config.h $(SRCDIR)/version.h
 	mkdir -p $(BUILDDIR);
@@ -32,8 +32,8 @@ clean:
 	echo " Cleaning..."; 
 	echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-install: $(target)
-	install -v -t $(PREFIX)/bin -D $(TARGET) 
+install: $(filter-out bin/checkFile,  $(TARGET))
+	install -v -t $(PREFIX)/bin -D $^  
 
 # Tests
 # tester:

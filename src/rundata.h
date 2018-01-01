@@ -23,6 +23,7 @@ struct RunData
   char workingDirectory[256];
   std::string sampleSheet;
   std::string outputDirectory;
+  std::string inputDirectory;
   bool pairedEnd;
   bool debug;
   char projectName[256];

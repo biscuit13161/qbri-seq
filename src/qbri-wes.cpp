@@ -28,8 +28,9 @@ int main (int argc, char *argv[])
   char select;
   RunData * run = new RunData;
   bool samplesheet = false;
-  bool outputdirectory = false;
   bool help = false;
+  bool outputdirectory = false;
+  bool inputdirectory = false;
   bool fixMisecodedQ = false;
   string reference;
   RefData * ref = new RefData;
@@ -41,6 +42,7 @@ int main (int argc, char *argv[])
       static struct option long_options[] =
         {
           {"samplesheet", required_argument, 0, 's'},
+          {"inputdirectory" , required_argument, 0,'d'}, 
           {"outputdirectory", required_argument, 0,'o'},
           {"reference", required_argument, 0,'R'},
           {"help", no_argument, 0, 'h'},
@@ -58,7 +60,7 @@ int main (int argc, char *argv[])
       /* getopt_long stores the option index here. */
       int option_index = 0;
 
-      c = getopt_long (argc, argv, "s:o:R:hrfbqmitvV",
+      c = getopt_long (argc, argv, "s:o:d:R:hrfbqmitvV",
                        long_options, &option_index);
 
       /* Detect the end of the options. */
@@ -141,6 +143,12 @@ int main (int argc, char *argv[])
           samplesheet = true;
           break;
         }
+        case 'd':
+        {
+          run->inputDirectory = optarg;
+          inputdirectory = true;
+          break;
+       }
         case 'o':
         {
           run->outputDirectory = optarg;
@@ -179,6 +187,9 @@ int main (int argc, char *argv[])
 
     if (!samplesheet && !outputdirectory)
       populateRunData(run);
+
+    if (!inputdirectory)
+      run->inputDirectory = run->outputDirectory;
 
     getSampleSheet(run);
 
@@ -225,19 +236,20 @@ void printHelpDNA()
   cout << "\tqbri-wes <function> [--samplesheet <path/to/samplesheet>] [--outputdirectory <path/to/output/directory>] [--reference <hg19|hg38>]" << endl << endl; 
   cout << "where function is one of: --bcl2fastq, --bwa, --markduplicates, --indelrealign --baserecalibration, --haplotypecaller, or --varientrecalibration" <<endl << endl;
 
-  cout << "--samplesheet (-s)           Sample Sheet to be used for samples" << endl 
-       << "--outputdirectory (-o)       Output directory for data" << endl
-       << "--reference (-R)             Select reference for alignment and processing" << endl
-       << "--help (-h)                  Display This help page" << endl
-       << "--version (-V)               Display script version details" << endl
-       << "--bcl2fastq (-f)             Run Illumina's BCL2Fastq conversion and de-multiplexing" << endl
-       << "--bwa (-b)                   Align Samples using BWA" << endl
-       << "--markduplicates (-m)        Mark Duplicate reads for samples, using Picard" << endl
-       << "--indelrealign (-i)          Realign Indels, using GATK" << endl
-       << "--baserecalibration (-r)     Base Recalibration using GATK" << endl
-       << "--haplotypecaller (-t)       Call snps for samples, using GATK" << endl
-       << "--varientfiltration (-v)     Carry out Varient Filtration, using GATK" << endl
-       <<"fixmisencodedqualityscores (-q)" << endl << endl;
+  cout << "--samplesheet (-s)                Sample Sheet to be used for samples" << endl 
+       << "--outputdirectory (-o)            Output directory for data" << endl
+       << "--inputdirectory (-d)             Input directory for data [defaults to outputdirectory]" << endl
+       << "--reference (-R)                  Select reference for alignment and processing" << endl
+       << "--help (-h)                       Display This help page" << endl
+       << "--version (-V)                    Display script version details" << endl
+       << "--bcl2fastq (-f)                  Run Illumina's BCL2Fastq conversion and de-multiplexing" << endl
+       << "--bwa (-b)                        Align Samples using BWA" << endl
+       << "--markduplicates (-m)             Mark Duplicate reads for samples, using Picard" << endl
+       << "--indelrealign (-i)               Realign Indels, using GATK" << endl
+       << "--baserecalibration (-r)          Base Recalibration using GATK" << endl
+       << "--haplotypecaller (-t)            Call snps for samples, using GATK" << endl
+       << "--varientfiltration (-v)          Carry out Varient Filtration, using GATK" << endl
+       << "--fixmisencodedqualityscores (-q) " << endl << endl;
 
 }
 

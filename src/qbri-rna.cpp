@@ -32,6 +32,7 @@ int main (int argc, char *argv[])
   RunData * run = new RunData;
   bool samplesheet = false;
   bool outputdirectory = false;
+  bool inputdirectory = false;
   bool help = false;
   bool fixMisecodedQ = false;
   string reference;
@@ -45,6 +46,7 @@ int main (int argc, char *argv[])
         {
           {"samplesheet", required_argument, 0, 'S'},
           {"outputdirectory", required_argument, 0,'o'},
+          {"inputdirectory" , required_argument, 0,'d'}, 
           {"reference", required_argument, 0,'R'},
           {"help", no_argument, 0, 'h'},
           {"version", no_argument, 0, 'V'},
@@ -62,7 +64,7 @@ int main (int argc, char *argv[])
       /* getopt_long stores the option index here. */
       int option_index = 0;
 
-      c = getopt_long (argc, argv, "sS:o:R:hrfcbmqitvV",
+      c = getopt_long (argc, argv, "sS:o:d:R:hrfcmqitvV",
                        long_options, &option_index);
 
       /* Detect the end of the options. */
@@ -122,6 +124,12 @@ int main (int argc, char *argv[])
           samplesheet = true;
           break;
         }
+        case 'd':
+        {
+          run->inputDirectory = optarg;
+          inputdirectory = true;
+          break;
+       }
         case 'o':
         {
           run->outputDirectory = optarg;
@@ -160,6 +168,9 @@ int main (int argc, char *argv[])
 
     if (!samplesheet && !outputdirectory)
       populateRunData(run);
+
+    if (!inputdirectory)
+      run->inputDirectory = run->outputDirectory;
 
     getSampleSheet(run);
 
