@@ -20,7 +20,7 @@ void baseRecal(string sample, string& outputDirectory, int count, string& refere
   inputFile += "/" + sample + ".ir.bam";
   cout << endl << "\tRecalibrating Bases for " << sample << endl << endl;
 
-  string cmd = "java " + string(PICARDMEM) +" -jar "+ string(GATK) +" -T BaseRecalibrator -I "+ inputFile;
+  string cmd = "java " + string(GATKMEM) +" -jar "+ string(GATK) +" -T BaseRecalibrator -I "+ inputFile;
   if (count == 1)
   {
     string outputFile = outputDirectory + "/" + sample + ".br.grp";
