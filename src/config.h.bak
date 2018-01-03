@@ -1,6 +1,6 @@
 /* Define location of reference material */
-#define HG19_BUNDLE "/media/west/hg19/" 
-#define HG38_BUNDLE "/media/west/hg38/"
+#define HG19_BUNDLE "/smb/hg19/" 
+#define HG38_BUNDLE "/smb/hg38/"
 
 /* Options for BWA*/
 #define BWA_CORES "16"
