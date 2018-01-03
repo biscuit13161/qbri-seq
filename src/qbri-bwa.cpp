@@ -18,7 +18,7 @@ void alignReads (string sample, string& outputDirectory, vector<string> files, s
 {
       cout << ref << endl;
   
-  string regex_string = ".*" + sample + ".*\\.fastq\\.gz";
+  string regex_string = ".*" + sample + ".*\\.fastq.*";
   regex sam(regex_string);
   regex r1(".*R1.*");
   regex r2(".*R2.*");
@@ -38,14 +38,17 @@ void alignReads (string sample, string& outputDirectory, vector<string> files, s
         fastq2 = *vt;
       }
     }
-  } 
+  }
+ 
   string output_file = outputDirectory + "/" + sample + ".bam";
   cout << endl << "\tAligning " << sample << endl << endl;
 
   //string readGroup = "'@RG\tID:"+sample+"\tLB:" + sample + "\tPL:Illumina\tPU:2500\tSM:" + sample +"\n'";
 
   //*
-    cout << "Output_file: " << output_file << endl;
+    cout << "Input file1: " << fastq1 << endl;
+    cout << "Input file2: " << fastq2 << endl;
+    cout << "Output file: " << output_file << endl;
     string exec2 = "bwa mem -t 8 " + ref + " " + fastq1 + " " + fastq2 + " | samtools sort -@8 -O BAM -o " + output_file ;
     // cout << exec2 << endl;
     
@@ -57,7 +60,8 @@ void runBWA(RunData * run,RefData * ref)
 {
   cout << endl << "runBWA: " << ref->reference << endl << endl;
   set<string> samples;
-  cout << run->outputDirectory << endl;
+  cout << "Input Dir:  " <<run->inputDirectory << endl;
+  cout << "Output Dir: " <<run->outputDirectory << endl;
   vector<string> files = getFileList(run->inputDirectory);  
   int count = 1;
 

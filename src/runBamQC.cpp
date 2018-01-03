@@ -34,7 +34,9 @@ void flagstat(string& sample, string& file)
 {
   boost::filesystem::path p(file);
   p.remove_filename();
-  string output_file = p.c_str() + sample + ".flagstat.txt";
+  p /= sample + ".flagstat.txt";
+  string output_file = p.c_str() ;
+  //string output_file = p.c_str() + "/" + sample + ".flagstat.txt";
   boost::filesystem::ofstream out(output_file, boost::filesystem::ofstream::app);
   //ofstream out(output_file, ofstream::app);
   out << endl << endl << file << endl;

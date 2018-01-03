@@ -64,7 +64,7 @@ string printReads(string sample, string& outputDirectory, string& reference)
 
   cout << endl << "\tPrinting Reads for " << sample << endl << endl;
 
-  string cmd = string(JAVA) + " "+ string(GATKMEM) +" -jar "+ string(GATK) + " -T PrintReads -I "+ inputFile +" -o "+ outputFile +" -BQSR "+ bqsrFile +" -R "+ reference +" --generate_md5";
+  string cmd = string(JAVA) + " "+ string(PICARDMEM) +" -jar "+ string(GATK) + " -T PrintReads -I "+ inputFile +" -o "+ outputFile +" -BQSR "+ bqsrFile +" -R "+ reference +" --generate_md5";
   execCmd(cmd);
 
   return output;

@@ -1,5 +1,0 @@
-HG19 = "/media/west/hg19/" 
-HG38 = "/results/hg38/"
-GATK = "/apps/gatk/GenomeAnalysisTK.jar"
-PICARD = "/apps/picard.jar"
-JAVAMEM = "-Xmx16g"
