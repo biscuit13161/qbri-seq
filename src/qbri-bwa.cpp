@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <unistd.h>  // provides execlp()
 #include <regex>
+#include "colormod.h" // namespace Color
 #include "getFileList.h"
 #include "qbri-bwa.h"
 #include "qbri-bcl2fastq.h"
@@ -16,7 +17,9 @@ using namespace std;
 
 void alignReads (string sample, string& outputDirectory, vector<string> files, string& ref)
 {
-      cout << ref << endl;
+  Color::Modifier red(Color::FG_RED);
+  Color::Modifier def(Color::FG_DEFAULT);
+  cout << ref << endl;
   
   string regex_string = ".*" + sample + ".*\\.fastq.*";
   regex sam(regex_string);
@@ -41,7 +44,7 @@ void alignReads (string sample, string& outputDirectory, vector<string> files, s
   }
  
   string output_file = outputDirectory + "/" + sample + ".bam";
-  cout << endl << "\tAligning " << sample << endl << endl;
+  cout << endl << red << "\tAligning " << sample << def << endl << endl;
 
   //string readGroup = "'@RG\tID:"+sample+"\tLB:" + sample + "\tPL:Illumina\tPU:2500\tSM:" + sample +"\n'";
 
