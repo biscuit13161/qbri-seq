@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void VariantRecalibrator(string sample, string& outputDirectory, string mode, string& reference, string& mills, string& dbsnp, string& hapmap, string& g1000)
+void VariantRecalibrator(string sample, string& outputDirectory, string mode, string& reference, string& mills, string& dbsnp, string& hapmap, string& g1000, bool index)
 {
   string inputFile = outputDirectory;
   if (mode == "SNP")
@@ -48,7 +48,17 @@ void VariantRecalibrator(string sample, string& outputDirectory, string mode, st
         + " -resource:dbsnp,known=true,training=false,truth=false,prior=2.0 "+  dbsnp +" -mode "+  mode 
         + " --maxGaussians 4 -minNumBad 1000 -nt " + string(GATK_CORES)+ " -an FS -an DP";
     }
-  execCmd(cmd);
+  try {
+    //cout << cmd << endl;
+    if ( index == true ) {
+      cmd = cmd + " --disable_auto_index_creation_and_locking_when_reading_rods";
+    }
+    execCmd(cmd);
+  }
+  catch (...)
+  {
+    cout << "Unable to complete " << mode << " variant recalibration!" << endl;
+  }
 }
 
 void runVarientRecalibration(RunData * run, string mode, RefData * ref)
@@ -59,12 +69,12 @@ void runVarientRecalibration(RunData * run, string mode, RefData * ref)
   {
     RunSample * sample = *it;
     samples.insert(sample->sampleID);
-    VariantRecalibrator(sample->sampleID, run->outputDirectory, mode, ref->reference, ref->mills, ref->dbsnp, ref->hapmap, ref->g1000);
-    ApplyRecalibration(sample->sampleID, run->outputDirectory, mode, ref->reference);
+    VariantRecalibrator(sample->sampleID, run->outputDirectory, mode, ref->reference, ref->mills, ref->dbsnp, ref->hapmap, ref->g1000, run->index);
+    ApplyRecalibration(sample->sampleID, run->outputDirectory, mode, ref->reference,run->index);
   }
 }
 
-void ApplyRecalibration(string sample, string& outputDirectory, string mode, string& reference)
+void ApplyRecalibration(string sample, string& outputDirectory, string mode, string& reference, bool index)
 {
   string inputFile = outputDirectory;
   if (mode == "SNP")
@@ -78,6 +88,9 @@ void ApplyRecalibration(string sample, string& outputDirectory, string mode, str
   cout << endl << "\tApplying " << mode << " Recalibration for " << sample << endl << endl;
 
   string cmd = string(JAVA) + " "+ string(GATKMEM) + " -jar "+ string(GATK) + " -T ApplyRecalibration --input "+ inputFile +" -o "+ outputFile +" -R "+ reference +" -recalFile "+ recalFile +" -tranchesFile "+ tranchesFile +" -nt " + string(GATK_CORES) + " --ts_filter_level 99.9 --generate_md5 -mode "+ mode;
+    if ( index == true ) {
+      cmd = cmd + " --disable_auto_index_creation_and_locking_when_reading_rods";
+    }
   execCmd(cmd);
 }
 

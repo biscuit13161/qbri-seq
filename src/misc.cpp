@@ -93,3 +93,13 @@ string ReadGroups(string sample, string& outputDirectory)
  
   return output_file;
 }
+
+/*
+template<typename T>
+void verbCout (T s, bool verbose)
+{
+  if (verbose = true)
+    cout << s << endl;
+}
+*/
+

@@ -174,7 +174,8 @@ int main (int argc, char *argv[])
 
     getSampleSheet(run);
 
-    getReference(ref);
+    if (select != 'f')
+      getReference(ref);
 
 
     switch(select)

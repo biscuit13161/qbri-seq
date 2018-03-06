@@ -15,14 +15,23 @@
 
 using namespace std;
 
-void alignReads (string sample, string& outputDirectory, vector<string> files, string& ref)
+template<typename T>
+void verbCout (T s, bool verbose)
+{
+  if (verbose = true)
+    cout << s << endl;
+}
+
+void alignReads (string sample, string& outputDirectory, vector<string> files, string& ref, bool verbose)
 {
   Color::Modifier red(Color::FG_RED);
   Color::Modifier def(Color::FG_DEFAULT);
   cout << ref << endl;
   
-  string regex_string = ".*" + sample + ".*\\.fastq.*";
+  string regex_string = ".*" + sample + ".*\\.fastq";
   regex sam(regex_string);
+  regex_string = ".*" + sample + ".*\\.fastq\\.gz";
+  regex sam2(regex_string);
   regex r1(".*R1.*");
   regex r2(".*R2.*");
   string fastq1;
@@ -30,7 +39,7 @@ void alignReads (string sample, string& outputDirectory, vector<string> files, s
 
   for (vector<string>::iterator vt = files.begin(); vt != files.end(); ++vt)
   {
-    if (regex_match(*vt,sam) )
+    if (regex_match(*vt,sam) || regex_match(*vt,sam2))
     {
       if (regex_match(*vt,r1) )
       {
@@ -49,7 +58,7 @@ void alignReads (string sample, string& outputDirectory, vector<string> files, s
   //string readGroup = "'@RG\tID:"+sample+"\tLB:" + sample + "\tPL:Illumina\tPU:2500\tSM:" + sample +"\n'";
 
   //*
-    cout << "Input file1: " << fastq1 << endl;
+    verbCout(string("Input file1: " + fastq1), verbose);;
     cout << "Input file2: " << fastq2 << endl;
     cout << "Output file: " << output_file << endl;
     string exec2 = "bwa mem -t 8 " + ref + " " + fastq1 + " " + fastq2 + " | samtools sort -@8 -O BAM -o " + output_file ;
@@ -73,7 +82,7 @@ void runBWA(RunData * run,RefData * ref)
     RunSample * sample = *it;
     cout << sample->sampleID << endl;
     samples.insert(sample->sampleID);
-    alignReads(sample->sampleID,run->outputDirectory,files,ref->reference);
+    alignReads(sample->sampleID,run->outputDirectory,files,ref->reference, run->verbose);
     //sortReads(sample->sampleID,run->outputDirectory);
     string output = ReadGroups(sample->sampleID,run->outputDirectory);
     runBamQC(sample->sampleID, output);

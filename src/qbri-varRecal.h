@@ -7,8 +7,8 @@
 #include <vector>
 #include "rundata.h"
 
-void VariantRecalibrator(std::string sample, std::string& outputDirectory, std::string mode, std::string& reference, std::string& mills, std::string& dbsnp, std::string& hapmap, std::string& g1000);
+void VariantRecalibrator(std::string sample, std::string& outputDirectory, std::string mode, std::string& reference, std::string& mills, std::string& dbsnp, std::string& hapmap, std::string& g1000, bool index);
 void runVarientRecalibration(RunData * run, std::string mode, RefData * ref);
-void ApplyRecalibration(std::string sample, std::string& outputDirectory, std::string mode, std::string& reference);
+void ApplyRecalibration(std::string sample, std::string& outputDirectory, std::string mode, std::string& reference, bool index);
 
 #endif

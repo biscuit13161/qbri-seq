@@ -27,6 +27,8 @@ int main (int argc, char *argv[])
   int c;
   char select;
   RunData * run = new RunData;
+  run->index = false;
+  run->verbose = false;
   bool samplesheet = false;
   bool help = false;
   bool outputdirectory = false;
@@ -41,7 +43,7 @@ int main (int argc, char *argv[])
     {
       static struct option long_options[] =
         {
-          {"samplesheet", required_argument, 0, 's'},
+          {"samplesheet", required_argument, 0, 'S'},
           {"inputdirectory" , required_argument, 0,'d'}, 
           {"outputdirectory", required_argument, 0,'o'},
           {"reference", required_argument, 0,'R'},
@@ -55,12 +57,14 @@ int main (int argc, char *argv[])
           {"haplotypecaller", no_argument, 0, 't'},
           {"varientrecalibration", no_argument, 0, 'v'},
           {"fixmisencodedqualityscores", no_argument, 0, 'q'},
+          {"disableindexcreation", no_argument, 0, 'I'}, 
+          {"verbose", no_argument, 0, 'x'},
           {0, 0, 0, 0}
         };
       /* getopt_long stores the option index here. */
       int option_index = 0;
 
-      c = getopt_long (argc, argv, "s:o:d:R:hrfbqmitvV",
+      c = getopt_long (argc, argv, "S:o:d:R:hrfbqmiItvVx",
                        long_options, &option_index);
 
       /* Detect the end of the options. */
@@ -87,40 +91,11 @@ int main (int argc, char *argv[])
           break;
         }
         case 'f':
-        {
-          select = c;
-          break;
-        }
         case 'b':
-        {
-          select = c;
-          break;
-        }
         case 'm':
-        {
-          select = c;
-          break;
-        }
         case 'i':
-        {
-          select = c;
-          break;
-        }
         case 't':
-        {
-          select = c;
-          break;
-        }
-        case 'q':
-        {
-          fixMisecodedQ = true;
-          break;
-        }
         case 'r':
-        {
-          select = c;
-          break;
-        }
         case 'v':
         {
           select = c;
@@ -137,7 +112,7 @@ int main (int argc, char *argv[])
           printVersion ();
           break;
         }
-        case 's':
+        case 'S':
         {
           run->sampleSheet = optarg;
           samplesheet = true;
@@ -155,6 +130,21 @@ int main (int argc, char *argv[])
           outputdirectory = true;
           break;
        }
+        case 'q':
+        {
+          fixMisecodedQ = true;
+          break;
+        }
+        case 'I':
+        {
+          run->index = true;
+          break;
+        }
+        case 'x':
+        {
+          run->verbose = true;
+          break;
+        }
         case '?':
           /* getopt_long already printed an error message. */
           break;
@@ -236,7 +226,7 @@ void printHelpDNA()
   cout << "\tqbri-wes <function> [--samplesheet <path/to/samplesheet>] [--outputdirectory <path/to/output/directory>] [--reference <hg19|hg38>]" << endl << endl; 
   cout << "where function is one of: --bcl2fastq, --bwa, --markduplicates, --indelrealign --baserecalibration, --haplotypecaller, or --varientrecalibration" <<endl << endl;
 
-  cout << "--samplesheet (-s)                Sample Sheet to be used for samples" << endl 
+  cout << "--samplesheet (-S)                Sample Sheet to be used for samples" << endl 
        << "--outputdirectory (-o)            Output directory for data" << endl
        << "--inputdirectory (-d)             Input directory for data [defaults to outputdirectory]" << endl
        << "--reference (-R)                  Select reference for alignment and processing" << endl
@@ -249,7 +239,9 @@ void printHelpDNA()
        << "--baserecalibration (-r)          Base Recalibration using GATK" << endl
        << "--haplotypecaller (-t)            Call snps for samples, using GATK" << endl
        << "--varientfiltration (-v)          Carry out Varient Filtration, using GATK" << endl
-       << "--fixmisencodedqualityscores (-q) " << endl << endl;
+       << "--fixmisencodedqualityscores (-q) " << endl 
+       << "--disableindexcreation (-I) " << endl 
+       << "--verbose (-x) "<< endl << endl;
 
 }
 

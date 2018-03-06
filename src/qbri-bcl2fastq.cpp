@@ -154,15 +154,6 @@ void runBcl2fastq(RunData * run)
 
 void runFastqc(RunData * run)
 {
-// parallel -j 4 fastqc {} ::: /results/rnaseq.BHJ35GBBXX/Rnaseq_Essam/B*.fastq.gz
-  /*string cmd = "parallel -j 4 fastqc {} ::: ";
-  cmd += run->outputDirectory;
-  cmd += "/";
-  cmd += run->projectName; 
-  cmd += "/*.fastqc.gz";
-
-  system(cmd.c_str());
- //*/
   set<string>::iterator it;
   for (it=run->projectNames.begin(); it!= run->projectNames.end(); ++it)
   {  
@@ -171,6 +162,8 @@ void runFastqc(RunData * run)
     dirs += run->projectName;
     dirs += *it;
     cout << dirs << endl;
+    string cmd = "parallel --progress --delay 5 --tag fastqc -o " + dirs + " {} ::: ";
+    string cmd2 = "parallel --progress --delay 5 --tag md5sum {} '>' {}.md5 ::: ";
     regex exp(".*\\.fastq\\.gz");
     smatch m;
     string filelist;
@@ -180,11 +173,18 @@ void runFastqc(RunData * run)
       string out = *ls; 
       if (regex_match(out,exp) )
       {
-        string cmd = "fastqc -o "+ dirs + " " + out;
-        execCmd(cmd);
+        cmd = cmd + " " + out;
+        cmd2 = cmd2 + " " + out;
+        //string cmd = "fastqc -o "+ dirs + " " + out;
+        //string cmd2 = "md5sum " + out + " > " + out + ".md5";
       }
     }
+    cout << cmd << endl;
+    execCmd(cmd);
+    cout << cmd2 << endl;
+    execCmd(cmd2);
   }
+
 }
 
 

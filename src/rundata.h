@@ -25,7 +25,9 @@ struct RunData
   std::string outputDirectory;
   std::string inputDirectory;
   bool pairedEnd;
+  bool index;
   bool debug;
+  bool verbose;
   char projectName[256];
   std::set<std::string> projectNames;
   std::vector<RunSample *> Samples;
