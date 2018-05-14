@@ -162,7 +162,7 @@ void runFastqc(RunData * run)
     dirs += run->projectName;
     dirs += *it;
     cout << dirs << endl;
-    string cmd = "parallel --progress --delay 5 --tag fastqc -o " + dirs + " {} ::: ";
+    string cmd = "parallel --progress --delay 5 --tag fastqc  -extract -o " + dirs + " {} ::: ";
     string cmd2 = "parallel --progress --delay 5 --tag md5sum {} '>' {}.md5 ::: ";
     regex exp(".*\\.fastq\\.gz");
     smatch m;
@@ -173,10 +173,21 @@ void runFastqc(RunData * run)
       string out = *ls; 
       if (regex_match(out,exp) )
       {
-        cmd = cmd + " " + out;
-        cmd2 = cmd2 + " " + out;
-        //string cmd = "fastqc -o "+ dirs + " " + out;
-        //string cmd2 = "md5sum " + out + " > " + out + ".md5";
+        vector<RunSample>::iterator pt;
+        //for (pt=run->Samples.begin(); pt!= run->Samples.end(); ++pt)
+        for (pt=run->Samples.begin(); pt!= run->Samples.end(); ++pt)
+        {
+          RunSample pto = *pt;
+          string 
+          regex exp2(pto->sampleID);
+          if (regex_match(out,exp2))
+          {
+            cmd = cmd + " " + out;
+            cmd2 = cmd2 + " " + out;
+            //string cmd = "fastqc -o "+ dirs + " " + out;
+            //string cmd2 = "md5sum " + out + " > " + out + ".md5";
+          }
+        }
       }
     }
     cout << cmd << endl;
